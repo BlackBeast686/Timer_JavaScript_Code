@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Countdown Timer</title>
+    <style>
+        body {
+            background-color: #544c5b;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-top: 50px;
+        }
+        
+        #timer-input {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            margin-top: 40px;
+            font-size: 34px;
+        }
+        
+        #timer-input label {
+            margin-right: 10px;
+        }
+        
+        #timer-input input {
+            width: 100px;
+            height: 35px;
+            margin-right: 10px;
+            text-align: center;
+        }
+        
+        #timer-input button {
+            padding: 20px;
+            font-size: 26px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+        }
+        
+        #timer-input button:hover {
+            background-color: #3e8e41;
+        }
+        
+        .timer {
+            font-size: 48px;
+            text-align: center;
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease-in-out;
+        }
+        
+        .timer-ended {
+            background-color: #FF6347;
+            color: white;
+            transform: scale(1.1);
+        }
+        
+        .countdown-timer {
+            display: none;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+            font-size: 30px;
+            color: rgb(44, 38, 101);
+            background-color: #ad9b9b;
+        }
+        
+        .countdown-timer span {
+            margin: 0 1px;
+        }
+        
+        .buttons {
+            display: flex;
+            justify-content: center;
+            margin-top: 50px;
+        }
+        
+        .buttons button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 10px;
+            cursor: pointer;
+            font-size: 26px;
+            border-radius: 10px;
+        }
+        
+        .buttons button:hover {
+            background-color: #3e8e41;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Countdown Timer</h1>
+    <div id="timer-input">
+        <label for="hours-input">Hours:</label>
+        <input type="number" id="hours-input" min="0" max="23" value="0" />
+        <label for="minutes-input">Minutes:</label>
+        <input type="number" id="minutes-input" min="0" max="59" value="0" />
+        <label for="seconds-input">Seconds:</label>
+        <input type="number" id="seconds-input" min="0" max="59" value="0" />
+        <button id="start-timer">Start Timer</button>
+    </div>
+    <div class="countdown-timer">
+        <span class="hours">00</span> :
+        <span class="minutes">00</span> :
+        <span class="seconds">00</span>
+    </div>
+    <div class="buttons">
+        <button id="end-timer">End Timer</button>
+        <button id="restart-timer">Restart</button>
+    </div>
+
+    <script>
+        let timeRemaining;
+        let timer;
+
+        const countdown = () => {
+            const hours = Math.floor(timeRemaining / (1000 * 60 * 60));
+            const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+
+            if (timeRemaining <= 0) {
+                clearInterval(timer);
+                new Audio('clock.mp3').play();
+                window.alert('Timer has ended!');
+                document.getElementById('timer-input').style.display = 'flex';
+                document.querySelector('.countdown-timer').style.display = 'none';
+            } else {
+                document.querySelector('.hours').textContent = hours < 10 ? `0${hours}` : hours;
+                document.querySelector('.minutes').textContent = minutes < 10 ? `0${minutes}` : minutes;
+                document.querySelector('.seconds').textContent = seconds < 10 ? `0${seconds}` : seconds;
+                timeRemaining -= 1000;
+
+            }
+        };
+        document.getElementById('start-timer').addEventListener('click', () => {
+            const hours = document.getElementById('hours-input').value;
+            const minutes = document.getElementById('minutes-input').value;
+            const seconds = document.getElementById('seconds-input').value;
+
+            timeRemaining = (hours * 60 * 60 + minutes * 60 + Number(seconds)) * 1000;
+
+            document.getElementById('timer-input').style.display = 'none';
+            document.querySelector('.countdown-timer').style.display = 'flex';
+
+            countdown();
+            timer = setInterval(countdown, 1000);
+        });
+
+        document.getElementById('end-timer').addEventListener('click', () => {
+            clearInterval(timer);
+            document.getElementById('timer-input').style.display = 'flex';
+            document.querySelector('.countdown-timer').style.display = 'none';
+        });
+
+        document.getElementById('restart-timer').addEventListener('click', () => {
+            clearInterval(timer);
+            document.getElementById('hours-input').value = 0;
+            document.getElementById('minutes-input').value = 0;
+            document.getElementById('seconds-input').value = 0;
+            document.getElementById('timer-input').style.display = 'flex';
+            document.querySelector('.countdown-timer').style.display = 'none';
+        });
+    </script>
+</body>
+
+</html>
